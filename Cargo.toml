@@ -1,6 +1,37 @@
 [package]
 name = "rustputin"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
+authors = ["kevin zevallos kevin.zevallos.l@utec.edu.pe"]
+description = "Motor de Simulación de Eventos Discretos de alto rendimiento en Rust"
 
 [dependencies]
+# 1. Motores Aleatorios y Estadísticos
+rand = "0.8"
+rand_chacha = "0.3"
+statrs = "0.16"
+
+# 2. Optimización de Estructuras de Datos
+rustc-hash = "1.1"
+
+# 3. Manejo de Errores y Utilidades
+thiserror = "1.0"
+log = "0.4"
+
+[dev-dependencies]
+# Para escribir pruebas unitarias y de integración claras
+approx = "0.5"
+
+# --- PERFILES DE COMPILACIÓN PARA MÁXIMO RENDIMIENTO ---
+
+[profile.release]
+opt-level = 3          # Máxima optimización de velocidad
+lto = true             # Link-Time Optimization: optimiza todo el código cruzando límites de crates
+codegen-units = 1      # Reduce el paralelismo de compilación para que el compilador optimice mejor
+panic = "abort"        # Elimina el código de desenredo (unwinding) de pila, reduciendo el binario
+strip = true           # Elimina símbolos de depuración para aligerar el binario final
+
+[profile.dev.package."*"]
+# Compila las dependencias externas con optimización incluso en modo Debug
+# Esto evita que rand y statrs sean lentos cuando estás probando tu código
+opt-level = 3
